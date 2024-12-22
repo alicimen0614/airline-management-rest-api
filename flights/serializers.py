@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 
 from dotenv import load_dotenv
+from django.utils.timezone import now
 import os
 
 load_dotenv()
@@ -41,14 +42,19 @@ class ReservationSerializer(serializers.ModelSerializer):
         read_only_fields = ('reservation_code',)
 
     def validate(self,data):
-        """Validate reservation to check flight capacity"""
+        """Validate reservation to check flight capacity and flight departure time"""
         flight = data.get('flight')
 
         current_reservations = models.Reservation.objects.filter(flight=flight)
         current_capacity = current_reservations.count()
+        flight_departure_time = flight.departure_time
+        current_time = now()
+
+        if current_time >= flight_departure_time:
+            raise serializers.ValidationError("Reservation cannot be made as the flight has already departed.")
 
         if current_capacity >= flight.airplane.capacity:
-            raise serializers.ValidationError(f"Cannot make reservation. Flight {flight.flight_number} is fully booked.")
+            raise serializers.ValidationError(f"Reservation cannot be made. Flight {flight.flight_number} is fully booked.")
         return data
     
     def create(self, validated_data):
