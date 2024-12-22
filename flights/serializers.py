@@ -1,7 +1,14 @@
 from rest_framework import serializers
+
 from flights import models
 
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 class AirplaneSerializer(serializers.ModelSerializer):
     """Serializes an airplane object"""
 
@@ -43,3 +50,25 @@ class ReservationSerializer(serializers.ModelSerializer):
         if current_capacity >= flight.airplane.capacity:
             raise serializers.ValidationError(f"Cannot make reservation. Flight {flight.flight_number} is fully booked.")
         return data
+    
+    def create(self, validated_data):
+        reservation = models.Reservation.objects.create(**validated_data)
+        subject = 'Reservation Confirmation'
+        context = {
+        'reservation': reservation,
+        'departure_time':reservation.flight.departure_time.strftime('%d.%m.%Y %H:%M')
+    }
+        html_content = render_to_string('flights/reservation_email.html',context)
+        from_email = f'Flight Support Team < {os.getenv("APP_EMAIL")} >'
+        recipient_list = [reservation.passenger_email]
+        
+        send_mail(
+            subject,
+            "",
+            from_email,
+            recipient_list,
+            fail_silently=False,
+            html_message=html_content
+        )
+        
+        return reservation
