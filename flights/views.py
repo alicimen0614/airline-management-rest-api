@@ -4,6 +4,7 @@ from flights import serializers
 from flights import models
 
 from rest_framework import viewsets
+from rest_framework import filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -27,6 +28,8 @@ class FlightViewSet(viewsets.ModelViewSet):
     """Handle creating, reading and updating flights"""
     serializer_class = serializers.FlightSerializer
     queryset = models.Flight.objects.all()
+    filter_backends=(filters.SearchFilter,)
+    search_fields=('departure','destination','departure_time','arrival_time',)
 
     @action(detail=True, methods=['GET'])
     def reservations(self, request, pk=None):
