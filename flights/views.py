@@ -8,6 +8,8 @@ from rest_framework import filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 class AirplaneViewSet(viewsets.ModelViewSet):
     """Handle creating, reading and updating airplanes"""
@@ -28,8 +30,12 @@ class FlightViewSet(viewsets.ModelViewSet):
     """Handle creating, reading and updating flights"""
     serializer_class = serializers.FlightSerializer
     queryset = models.Flight.objects.all()
-    filter_backends=(filters.SearchFilter,)
-    search_fields=('departure','destination','departure_time','arrival_time',)
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    filterset_fields=['departure','destination','departure_time','arrival_time']
+    search_fields = ['departure','destination','departure_time','arrival_time']
+    ordering_fields = ['departure','destination','departure_time','arrival_time']
+    ordering = ['departure_time']
+    
 
     @action(detail=True, methods=['GET'])
     def reservations(self, request, pk=None):

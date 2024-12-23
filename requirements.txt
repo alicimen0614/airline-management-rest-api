@@ -2,3 +2,4 @@ django==4.2.17
 djangorestframework==3.15.2
 shortuuid==1.0.13
 python-dotenv==1.0.1
+django-filter==24.3
