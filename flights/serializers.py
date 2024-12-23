@@ -27,6 +27,12 @@ class FlightSerializer(serializers.ModelSerializer):
 
     def validate(self,data):
         """Basic validation for departure_time and arrival_time"""
+        if 'departure_time' in data and 'arrival_time' not in data:
+            raise serializers.ValidationError("Arrival time must be provided with the departure time")
+        if 'arrival_time' in data and 'departure_time' not in data:
+            raise serializers.ValidationError("Departure time must be provided with arrival time")
+
+
         if(data['departure_time']>=data['arrival_time']):
             raise serializers.ValidationError("Departure time must be earlier than arrival time")
         
@@ -43,18 +49,20 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     def validate(self,data):
         """Validate reservation to check flight capacity and flight departure time"""
-        flight = data.get('flight')
+        # Only perform flight validation if 'flight' field is being updated
+        if 'flight' in data:
+            flight = data['flight']
+            current_reservations = models.Reservation.objects.filter(flight=flight)
+            current_capacity = current_reservations.count()
+            flight_departure_time = flight.departure_time
+            current_time = now()
+            
+            if current_time >= flight_departure_time:
+                raise serializers.ValidationError("Reservation cannot be made as the flight has already departed.")
 
-        current_reservations = models.Reservation.objects.filter(flight=flight)
-        current_capacity = current_reservations.count()
-        flight_departure_time = flight.departure_time
-        current_time = now()
+            if current_capacity >= flight.airplane.capacity:
+                raise serializers.ValidationError(f"Reservation cannot be made. Flight {flight.flight_number} is fully booked.")
 
-        if current_time >= flight_departure_time:
-            raise serializers.ValidationError("Reservation cannot be made as the flight has already departed.")
-
-        if current_capacity >= flight.airplane.capacity:
-            raise serializers.ValidationError(f"Reservation cannot be made. Flight {flight.flight_number} is fully booked.")
         return data
     
     def create(self, validated_data):
