@@ -49,5 +49,5 @@ class FlightViewSet(viewsets.ModelViewSet):
 
 class ReservationViewSet(viewsets.ModelViewSet):
     """Handle creating, reading and updating reservations"""
-    serializer_class = serializers.ReservationSerializer
+    serializer_class = serializers.ReservationSerializer()
     queryset = models.Reservation.objects.all()

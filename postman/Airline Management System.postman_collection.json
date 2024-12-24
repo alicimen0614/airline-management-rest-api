@@ -1,0 +1,656 @@
+{
+	"info": {
+		"_postman_id": "cc2c8a8b-c657-4ad5-9648-6988f8ef4f7c",
+		"name": "Airline Management System",
+		"description": "This project provides a backend API for managing an airline's operations for airplanes, flights, and passenger reservations. Built using Django REST Framework (DRF), the API enables CRUD operations on key models while incorporating features such as reservation code generation, capacity checks, and sending email after creating a reservation.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28692430",
+		"_collection_link": "https://airline-management-rest-api.postman.co/workspace/6a5ef1fd-9881-4fbc-82ff-80bdc7b4a571/collection/28692430-cc2c8a8b-c657-4ad5-9648-6988f8ef4f7c?action=share&source=collection_link&creator=28692430"
+	},
+	"item": [
+		{
+			"name": "Airplanes",
+			"item": [
+				{
+					"name": "List all airplanes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/airplanes/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"airplanes",
+								""
+							]
+						},
+						"description": "Retrieves the list of all airplanes in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific airplane",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/airplanes/:airplaneId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"airplanes",
+								":airplaneId"
+							],
+							"variable": [
+								{
+									"key": "airplaneId",
+									"value": "{{airplane_id}}"
+								}
+							]
+						},
+						"description": "##### Retrieves the details of a specific airplane.\n\n- `airplaneId` corresponds to an airplane's id in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Get airplane flights",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/airplanes/:airplaneId/flights",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"airplanes",
+								":airplaneId",
+								"flights"
+							],
+							"variable": [
+								{
+									"key": "airplaneId",
+									"value": "{{airplane_id}}"
+								}
+							]
+						},
+						"description": "##### Fetches all flights assigned to a specific airplane.\n\n- `airplaneId` corresponds to an airplane's id in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Add a new airplane",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"airplane_id\", jsonData.id);\r",
+									"pm.environment.clear();"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tail_number\":\"{{$randomCountryCode}}-{{$randomAlphaNumeric}}{{$randomInt}}\",\r\n    \"model\":\"Airbus {{$randomInt}}\",\r\n    \"capacity\":\"180\",\r\n    \"production_year\":\"1990\",\r\n    \"status\":\"{{$randomBoolean}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/airplanes/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"airplanes",
+								""
+							]
+						},
+						"description": "##### Allows you to add a new airplane.\n\nThe request body needs to be in JSON format and include the following properties:\n\n- `tail_number` \\- String - Required\n    \n- `model` \\- String - Required\n    \n- `capacity` \\- Integer- Required\n    \n- `production_year` \\- Integer - Optional\n    \n- `status` \\- Boolean - Optional (Default to True)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update an airplane",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"capacity\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/airplanes/:airplaneId/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"airplanes",
+								":airplaneId",
+								""
+							],
+							"variable": [
+								{
+									"key": "airplaneId",
+									"value": "{{airplane_id}}"
+								}
+							]
+						},
+						"description": "##### Updates the details of a specific airplane.\n\n- `airplaneId` corresponds to an airplane's id in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an airplane",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/airplanes/:airplaneId/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"airplanes",
+								":airplaneId",
+								""
+							],
+							"variable": [
+								{
+									"key": "airplaneId",
+									"value": "{{airplane_id}}"
+								}
+							]
+						},
+						"description": "##### Deletes an airplane from the database.\n\n- `airplaneId` corresponds to an airplane's id in the database."
+					},
+					"response": []
+				}
+			],
+			"description": "This module manages airplanes. It provides endpoints to create, read, update, delete airplane records and getting the flights related to a specific airplane. Each airplane can be linked to multiple flights."
+		},
+		{
+			"name": "Flights",
+			"item": [
+				{
+					"name": "List all flights",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								""
+							]
+						},
+						"description": "Retrieves the list of all flights in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific flight",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/:flightId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								":flightId"
+							],
+							"variable": [
+								{
+									"key": "flightId",
+									"value": "{{flight_id}}"
+								}
+							]
+						},
+						"description": "##### Retrieves the details of a specific flight.\n\n- `flightId` corresponds to a flight's id in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Get flight reservations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/:flightId/reservations/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								":flightId",
+								"reservations",
+								""
+							],
+							"variable": [
+								{
+									"key": "flightId",
+									"value": "{{flight_id}}"
+								}
+							]
+						},
+						"description": "##### Fetches all reservations for a specific flight.\n\n- `flightId` corresponds to a flight's id in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Add a new flight",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"flight_id\", jsonData.id);\r",
+									"pm.collectionVariables.set(\"arrival_time\", jsonData.arrival_time);\r",
+									"pm.collectionVariables.set(\"departure_time\", jsonData.departure_time);\r",
+									"pm.collectionVariables.set(\"departure\", jsonData.departure);\r",
+									"pm.collectionVariables.set(\"destination\", jsonData.destination);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"flight_number\": \"{{$randomAlphaNumeric}}{{$randomAlphaNumeric}}{{$randomAlphaNumeric}}{{$randomInt}}\",\r\n        \"departure\": \"{{$randomCountry}} Airport\",\r\n        \"destination\": \"{{$randomCountry}} Airport\",\r\n        \"departure_time\": \"2025-02-21T23:21:00Z\",\r\n        \"arrival_time\": \"2025-02-22T10:00:00Z\",\r\n        \"airplane\": {{airplane_id}}\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/flights/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								""
+							]
+						},
+						"description": "##### Allows you to add a new flight.\n\nThe request body needs to be in JSON format and include the following properties:\n\n- `flight_number` - String - Required\n    \n- `departure` - String - Required\n    \n- `destination` - String- Required\n    \n- `departure_time` \\- DateTime- Required\n    \n- `arrival_time` \\- DateTime - Required\n    \n- `airplane` \\- Integer (valid airplaneId) - Required"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a flight",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"departure_time\": \"2025-02-22T5:21:00Z\",\r\n    \"arrival_time\": \"2025-02-22T23:21:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/flights/:flightId/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								":flightId",
+								""
+							],
+							"variable": [
+								{
+									"key": "flightId",
+									"value": "{{flight_id}}"
+								}
+							]
+						},
+						"description": "##### Updates the details of a specific flight.\n\nNote: Ensure that both `departure_time` and `arrival_time` are provided together if either is included.\n\n- `flightId` corresponds to a flight's id in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a flight",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/:flightId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								":flightId"
+							],
+							"variable": [
+								{
+									"key": "flightId",
+									"value": "{{flight_id}}"
+								}
+							]
+						},
+						"description": "##### Deletes a flight from the database.\n\n- `flightId` corresponds to a flight's id in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Filter flights",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/?arrival_time={{arrival_time}}&departure_time={{departure_time}}&departure={{departure}}&destination={{destination}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								""
+							],
+							"query": [
+								{
+									"key": "arrival_time",
+									"value": "{{arrival_time}}"
+								},
+								{
+									"key": "departure_time",
+									"value": "{{departure_time}}"
+								},
+								{
+									"key": "departure",
+									"value": "{{departure}}"
+								},
+								{
+									"key": "destination",
+									"value": "{{destination}}"
+								},
+								{
+									"key": "search",
+									"value": "{{departure}}",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "departure_time",
+									"disabled": true
+								}
+							]
+						},
+						"description": "##### Filter flights based on the following attributes:\n\n- `arrival_time`\n    \n- `departure_time`\n    \n- `departure`\n    \n- `destination`\n    \n\nAdditionally, you can apply search and ordering filters by modifying the query parameters."
+					},
+					"response": []
+				}
+			],
+			"description": "The Flights module handles managing flights. It provides endpoints to create, read, update, delete flight records and getting the reservations related to a specific flight. Each flight is associated with an airplane and can have multiple reservations."
+		},
+		{
+			"name": "Reservations",
+			"item": [
+				{
+					"name": "List all reservations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/reservations/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reservations",
+								""
+							]
+						},
+						"description": "Retrieves the list of all reservations."
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific reservation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/reservations/:reservationId/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reservations",
+								":reservationId",
+								""
+							],
+							"variable": [
+								{
+									"key": "reservationId",
+									"value": "{{reservation_id}}"
+								}
+							]
+						},
+						"description": "Retrieves the details of a specific reservation.\n\n- `reservation_id` corresponds to a reservation's id in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Add a new reservation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"reservation_id\", jsonData.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"passenger_name\": \"{{$randomFullName}}\",\r\n    \"passenger_email\": \"example@gmail.com\",\r\n    \"status\": true,\r\n    \"flight\": {{flight_id}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reservations/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reservations",
+								""
+							]
+						},
+						"description": "##### Allows you to add a new reservation.\n\nNote: The email sending feature requires additional configurations, including SMTP server settings, an app password, and the app email address. Without these configurations, the request may result with errors.\n\nThe request body needs to be in JSON format and include the following properties:\n\n- `passenger_name` - String - Required\n    \n- `passenger_email` - String - Required (Enter a valid email to test email sending feature)\n    \n- `status` - Boolean - Optional (Default to True)\n    \n- `flight` - Integer (valid flightId) - Required"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a reservation",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"passenger_name\":\"{{$randomFullName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reservations/:reservationId/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reservations",
+								":reservationId",
+								""
+							],
+							"variable": [
+								{
+									"key": "reservationId",
+									"value": "{{reservation_id}}"
+								}
+							]
+						},
+						"description": "Updates the details of a specific reservation.\n\n- `reservation_id` corresponds to a reservation's id in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a reservation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reservations/:reservationId/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reservations",
+								":reservationId",
+								""
+							],
+							"variable": [
+								{
+									"key": "reservationId",
+									"value": "{{reservation_id}}"
+								}
+							]
+						},
+						"description": "##### Deletes a reservation from the database.\n\n- `reservation_id` corresponds to a reservation's id in the database."
+					},
+					"response": []
+				}
+			],
+			"description": "This module handles passenger reservations for flights. It provides endpoints to create, read, update, delete reservation records. Features include automatic generation of unique reservation codes, capacity checks to ensure flights do not exceed their maximum capacity and email sending after creation of a new reservation."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "127.0.0.1:8000/api"
+		},
+		{
+			"key": "reservation_id",
+			"value": "1"
+		},
+		{
+			"key": "flight_id",
+			"value": "1"
+		},
+		{
+			"key": "airplane_id",
+			"value": "1"
+		},
+		{
+			"key": "arrival_time",
+			"value": ""
+		},
+		{
+			"key": "departure_time",
+			"value": ""
+		},
+		{
+			"key": "departure",
+			"value": ""
+		},
+		{
+			"key": "destination",
+			"value": ""
+		}
+	]
+}

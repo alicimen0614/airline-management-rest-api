@@ -1,6 +1,7 @@
 from django.db import models
 import shortuuid
 
+
 class Airplane(models.Model):
     """Database model for airplanes"""
     tail_number = models.CharField(max_length=10,null=False,blank=False)
@@ -17,10 +18,10 @@ class Airplane(models.Model):
 class Flight(models.Model):
     """Database model for flights"""
     flight_number=models.CharField(max_length=50,null=False,blank=False)
-    departure = models.CharField(max_length=255)
-    destination = models.CharField(max_length=255)
-    departure_time = models.DateTimeField()
-    arrival_time = models.DateTimeField()
+    departure = models.CharField(max_length=255,null=False,blank=False)
+    destination = models.CharField(max_length=255,null=False,blank=False)
+    departure_time = models.DateTimeField(null=False,blank=False)
+    arrival_time = models.DateTimeField(null=False,blank=False)
     airplane = models.ForeignKey(Airplane,on_delete=models.CASCADE,related_name='flights')
 
     def __str__(self):

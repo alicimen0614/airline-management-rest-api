@@ -29,9 +29,9 @@ class FlightSerializer(serializers.ModelSerializer):
         """Basic validation for departure_time and arrival_time"""
         if 'departure_time' in data and 'arrival_time' not in data:
             raise serializers.ValidationError("Arrival time must be provided with the departure time")
+        
         if 'arrival_time' in data and 'departure_time' not in data:
             raise serializers.ValidationError("Departure time must be provided with arrival time")
-
 
         if(data['departure_time']>=data['arrival_time']):
             raise serializers.ValidationError("Departure time must be earlier than arrival time")
@@ -66,23 +66,28 @@ class ReservationSerializer(serializers.ModelSerializer):
         return data
     
     def create(self, validated_data):
+        """Customize create function to send email after creating reservation"""
         reservation = models.Reservation.objects.create(**validated_data)
         subject = 'Reservation Confirmation'
         context = {
         'reservation': reservation,
-        'departure_time':reservation.flight.departure_time.strftime('%d.%m.%Y %H:%M')
-    }
-        html_content = render_to_string('flights/reservation_email.html',context)
-        from_email = f'Flight Support Team < {os.getenv("APP_EMAIL")} >'
-        recipient_list = [reservation.passenger_email]
+        'departure_time':reservation.flight.departure_time.strftime('%d.%m.%Y %H:%M')}
+        app_email = os.getenv("APP_EMAIL")
+        app_password = os.getenv("APP_PASSWORD")
+        email_host = os.getenv("APP_EMAIL_HOST")
+
+        if app_email and app_password and email_host:
+            html_content = render_to_string('flights/reservation_email.html',context)
+            from_email = f'Flight Support Team < {os.getenv("APP_EMAIL")} >'
+            recipient_list = [reservation.passenger_email]
         
-        send_mail(
+            send_mail(
             subject,
             "",
             from_email,
             recipient_list,
             fail_silently=False,
             html_message=html_content
-        )
+            )
         
         return reservation
