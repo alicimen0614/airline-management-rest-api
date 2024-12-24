@@ -27,14 +27,18 @@ class FlightSerializer(serializers.ModelSerializer):
 
     def validate(self,data):
         """Basic validation for departure_time and arrival_time"""
-        if 'departure_time' in data and 'arrival_time' not in data:
-            raise serializers.ValidationError("Arrival time must be provided with the departure time")
-        
-        if 'arrival_time' in data and 'departure_time' not in data:
-            raise serializers.ValidationError("Departure time must be provided with arrival time")
-
-        if(data['departure_time']>=data['arrival_time']):
-            raise serializers.ValidationError("Departure time must be earlier than arrival time")
+        departure_time = data.get('departure_time')
+        arrival_time = data.get('arrival_time')
+    
+        if (departure_time and not arrival_time) or (arrival_time and not departure_time):
+            raise serializers.ValidationError(
+                "Both departure_time and arrival_time must be provided together.")
+    
+        if departure_time and arrival_time:
+            if departure_time >= arrival_time:
+             raise serializers.ValidationError(
+                "Departure time must be earlier than arrival time."
+            )
         
         return data
 

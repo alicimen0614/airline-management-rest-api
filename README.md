@@ -16,8 +16,8 @@ This project provides a backend API for managing an airline's operations for air
 2. Create a virtual environment and activate it.
 ```
 python -m venv venv
-source venv/bin/activate  # Linux/Mac için
-venv\Scripts\activate  # Windows için
+source venv/bin/activate  # for Linux/Mac
+venv\Scripts\activate  # for Windows
 ```
 3. Install dependencies using `pip install -r requirements.txt`.
 4. Run migrations: `python manage.py migrate`.

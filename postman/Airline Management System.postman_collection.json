@@ -5,7 +5,7 @@
 		"description": "This project provides a backend API for managing an airline's operations for airplanes, flights, and passenger reservations. Built using Django REST Framework (DRF), the API enables CRUD operations on key models while incorporating features such as reservation code generation, capacity checks, and sending email after creating a reservation.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "28692430",
-		"_collection_link": "https://airline-management-rest-api.postman.co/workspace/6a5ef1fd-9881-4fbc-82ff-80bdc7b4a571/collection/28692430-cc2c8a8b-c657-4ad5-9648-6988f8ef4f7c?action=share&source=collection_link&creator=28692430"
+		"_collection_link": "https://airline-management-rest-api.postman.co/workspace/Airline-Management-REST-API-Wor~6a5ef1fd-9881-4fbc-82ff-80bdc7b4a571/collection/28692430-cc2c8a8b-c657-4ad5-9648-6988f8ef4f7c?action=share&source=collection_link&creator=28692430"
 	},
 	"item": [
 		{
@@ -102,7 +102,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"tail_number\":\"{{$randomCountryCode}}-{{$randomAlphaNumeric}}{{$randomInt}}\",\r\n    \"model\":\"Airbus {{$randomInt}}\",\r\n    \"capacity\":\"180\",\r\n    \"production_year\":\"1990\",\r\n    \"status\":\"{{$randomBoolean}}\"\r\n}",
+							"raw": "{\r\n    \"tail_number\":\"TC-NRT\",\r\n    \"model\":\"Airbus A320\",\r\n    \"capacity\":\"180\",\r\n    \"production_year\":\"1985\",\r\n    \"status\":\"true\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -297,7 +297,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"flight_number\": \"{{$randomAlphaNumeric}}{{$randomAlphaNumeric}}{{$randomAlphaNumeric}}{{$randomInt}}\",\r\n        \"departure\": \"{{$randomCountry}} Airport\",\r\n        \"destination\": \"{{$randomCountry}} Airport\",\r\n        \"departure_time\": \"2025-02-21T23:21:00Z\",\r\n        \"arrival_time\": \"2025-02-22T10:00:00Z\",\r\n        \"airplane\": {{airplane_id}}\r\n    }",
+							"raw": "{\r\n        \"flight_number\": \"TK1234\",\r\n        \"departure\": \"Esenboga Airport\",\r\n        \"destination\": \"Istanbul Airport\",\r\n        \"departure_time\": \"2025-02-21T23:21:00Z\",\r\n        \"arrival_time\": \"2025-02-22T10:00:00Z\",\r\n        \"airplane\": {{airplane_id}}\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -351,7 +351,7 @@
 								}
 							]
 						},
-						"description": "##### Updates the details of a specific flight.\n\nNote: Ensure that both `departure_time` and `arrival_time` are provided together if either is included.\n\n- `flightId` corresponds to a flight's id in the database."
+						"description": "##### Updates the details of a specific flight.\n\nNote: Ensure that both `departure_time` and `arrival_time` must be provided together if either is included.\n\n- `flightId` corresponds to a flight's id in the database."
 					},
 					"response": []
 				},
@@ -500,7 +500,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"passenger_name\": \"{{$randomFullName}}\",\r\n    \"passenger_email\": \"example@gmail.com\",\r\n    \"status\": true,\r\n    \"flight\": {{flight_id}}\r\n}",
+							"raw": "{\r\n    \"passenger_name\": \"John Doe\",\r\n    \"passenger_email\": \"johndoe@example.com\",\r\n    \"status\": true,\r\n    \"flight\": {{flight_id}}\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -530,7 +530,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"passenger_name\":\"{{$randomFullName}}\"\r\n}",
+							"raw": "{\r\n    \"passenger_name\":\"James Doe\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
